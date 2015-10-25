@@ -98,6 +98,15 @@
 % default.
   \RequirePackage{setspace}
   \doublespacing
+  % Typeset display math in single spacing mode, though. This is particularly
+  % important when writing out matrices.
+  \AtEndPreamble{%
+      \makeatletter%
+      \everydisplay=\expandafter{%
+          \the\everydisplay\def\baselinestretch{1}\selectfont%
+      }%
+      \makeatother%
+  }
 
 %%%%%%%%%%%%%%
 %% PAGINATION
