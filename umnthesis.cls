@@ -85,10 +85,19 @@
 % bit better.
 
   % Load Computer Modern into the math font tables
-  \DeclareSymbolFont{lmlargesymbols}{OMX}{cmex}{m}{n}
+  \DeclareSymbolFont{cmlargesymbols}{OMX}{cmex}{m}{n}
   % Map the summation operator into the LM font
-  \let\sumop\relax
-  \DeclareMathSymbol{\sumop}{\mathop}{lmlargesymbols}{"50}
+  \DeclareMathSymbol{\sumop}{\mathop}{cmlargesymbols}{"50}
+
+% Similarly, the \ell (small script L) character in STIX has the beginning
+% of the loop far to high up the character (nearly half-way). CM's looks
+% quite a bit better, but it is slightly too light compared to STIX. The
+% glyph in Palatino, though, is a reasonable compromize.
+
+  % Small Script L substitution:
+  %     Loads Palatino and assigns \ell to use it instead.
+  \DeclareSymbolFont{plletters}{OML}{zplm}{m}{it}
+  \DeclareMathSymbol{\ell}{\mathalpha}{plletters}{"60}
 
 %%%%%%%%%%%
 %% SPACING
