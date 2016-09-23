@@ -196,10 +196,10 @@
   \PreAtEndPreamble{%
     \RequirePackage{hyperref}%
     \RequirePackage[all]{hypcap}%
-    % For some reason, the following commands do not seem to work if added to
-    % the package options, so we pass them via the hypersetup command instead.
   }
   \AtEndPreamble{%
+    % For some reason, the following commands do not seem to work if added to
+    % the package options, so we pass them via the hypersetup command instead.
     \hypersetup{
       % The following two options create colored underlines for links when
       % viewed with a PDF reader on screen, but do not apply to a printed
