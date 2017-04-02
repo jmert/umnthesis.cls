@@ -1,5 +1,5 @@
 \NeedsTeXFormat{LaTeX2e}
-\ProvidesClass{umnthesis}[2015/09/07 UMN Graduate School Thesis]
+\ProvidesClass{umnthesis}[2017/04/02 UMN Graduate School Thesis]
 
 % Base the entire document off report since it already provides chapters.
 % The U of M thesis also has margin requirements that are easiest to match in
@@ -163,6 +163,11 @@
 
 % Use microtype enhancements to make the visual appearance as nice as possible.
   \RequirePackage{microtype}
+
+% Patch \bfseries to also switch math into bold mode. This is really useful
+% for situations like having math in a section heading which may or may not
+% be bolded.
+  \xapptocmd{\bfseries}{\boldmath}{}{}
 
 % Use PDF hyperlinks. Load this at the end of the preamble as required by the
 % hyperref documentation.
