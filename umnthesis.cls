@@ -126,14 +126,14 @@
 % In addition to the standard \title and \author commands, we need to have
 % \institution, \advisor, \month, and \year commands for various bits of
 % information needed on the title page.
-  \global\let\@institution\@empty
-  \global\let\@advisor\@empty
-  \global\let\@month\@empty
-  \global\let\@year\@empty
-  \def\institution#1{\gdef\@institution{#1}}
-  \def\advisor#1{\gdef\@advisor{#1}}
-  \def\month#1{\gdef\@month{#1}}
-  \def\year#1{\gdef\@year{#1}}
+  \global\let\umnthesis@institution\@empty
+  \global\let\umnthesis@advisor\@empty
+  \global\let\umnthesis@month\@empty
+  \global\let\umnthesis@year\@empty
+  \newcommand{\institution}[1]{\gdef\umnthesis@institution{#1}}
+  \newcommand{\thesisadvisor}[1]{\gdef\umnthesis@advisor{#1}}
+  \newcommand{\thesismonth}[1]{\gdef\umnthesis@month{#1}}
+  \newcommand{\thesisyear}[1]{\gdef\umnthesis@year{#1}}
   % Furthermore, undefine \date since we won't allow it to prevent mistakes.
   \let\date\@undefined
   \let\@date\@undefined
@@ -252,16 +252,16 @@
     \MakeUppercase{\@title}%
     \par\vfill
     A DISSERTATION SUBMITTED TO THE FACULTY OF THE
-    \MakeUppercase{\@institution} BY
+    \MakeUppercase{\umnthesis@institution} BY
     \par\vfill
     \MakeUppercase{\@author}
     \par\vfill
     IN PARTIAL FULFILLMENT OF THE REQUIREMENTS FOR THE DEGREE OF
     DOCTOR OF PHILOSOPHY
     \par\vfill
-    \MakeUppercase{\@advisor}
+    \MakeUppercase{\umnthesis@advisor}
     \par\vfill
-    \MakeUppercase{\@month}~\MakeUppercase{\@year}
+    \MakeUppercase{\umnthesis@month}~\MakeUppercase{\umnthesis@year}
     \clearpage
   \endgroup%
   %%%%%%%%%%%%%%%%
@@ -273,7 +273,7 @@
     \centering%
     % Vertically center the content
     \null\vfill
-    \copyright~\MakeUppercase{\@author}~\@year\\
+    \copyright~\MakeUppercase{\@author}~\umnthesis@year\\
     ALL RIGHTS RESERVED
     \vfill
     \clearpage
@@ -309,3 +309,5 @@
   \setcounter{page}{1}
   \pagenumbering{arabic}
 }
+
+% vim: set syntax=tex:
