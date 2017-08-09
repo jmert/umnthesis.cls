@@ -1,10 +1,21 @@
 \NeedsTeXFormat{LaTeX2e}
-\ProvidesClass{umnthesis}[2017/04/02 UMN Graduate School Thesis]
+\ProvidesClass{umnthesis}[2017/08/09 UMN Graduate School Thesis]
 
 % Base the entire document off report since it already provides chapters.
 % The U of M thesis also has margin requirements that are easiest to match in
 % one-sided mode.
 \LoadClass[12pt,oneside]{report}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% DOCUMENT CLASS OPTIONS
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\RequirePackage{kvoptions}
+
+% Enables use of glossaries
+% TODO: Make the glossary package options customizable
+\DeclareBoolOption{glossary}
+
+\ProcessKeyvalOptions*
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %% LATEX SETUP
@@ -156,6 +167,25 @@
 % biber enabled by default. Then let the user control any further settings.
 
   \RequirePackage[backend=biber]{biblatex}
+
+%%%%%%%%%%%%
+%% GLOSSARY
+
+\ifumnthesis@glossary
+  % glossaries must be loaded after hyperref. Since hyperref will push itself
+  % onto the top of the AtEndPreamble stack, we can just append to the end
+  % and still have operations execute in the correct order.
+  \AtEndPreamble{%
+    \RequirePackage[
+        xindy,
+        toc,
+        nopostdot,
+        section=chapter,
+        numberedsection=autolabel
+    ]{glossaries}
+    \makeglossaries
+  }
+\fi
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %% OPTIONAL FORMATTING CHANGES
