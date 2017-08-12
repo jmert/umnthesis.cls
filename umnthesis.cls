@@ -25,6 +25,7 @@
 % here on out for their great utility:
   \RequirePackage{etoolbox}
   \RequirePackage{xpatch}
+  \RequirePackage{ifdraft}
 
 % We will always assume at the very least the pdfLaTeX is in use. To permit
 % possible specialization for XeLaTex and LuaLaTeX, create a new boolean that
