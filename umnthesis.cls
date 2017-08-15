@@ -1,11 +1,6 @@
 \NeedsTeXFormat{LaTeX2e}
 \ProvidesClass{umnthesis}[2017/08/09 UMN Graduate School Thesis]
 
-% Base the entire document off report since it already provides chapters.
-% The U of M thesis also has margin requirements that are easiest to match in
-% one-sided mode.
-\LoadClass[12pt,oneside]{report}
-
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %% DOCUMENT CLASS OPTIONS
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -16,6 +11,11 @@
 \DeclareBoolOption{glossary}
 
 \ProcessKeyvalOptions*
+
+% Base the entire document off report since it already provides chapters.
+% The U of M thesis also has margin requirements that are easiest to match in
+% one-sided mode.
+\LoadClassWithOptions{report}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %% LATEX SETUP
