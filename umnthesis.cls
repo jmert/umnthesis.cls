@@ -336,6 +336,14 @@
   \clearpage
   %%%%%%%%%%%%%%%%%
   %% DOCUMENT BODY
+  % In twoside mode, make sure we skip another page if necessary
+  \if@twoside
+    \ifodd\c@page
+    \else
+      \hbox{}
+      \clearpage
+    \fi
+  \fi
   % Finally, reset the counter again to 1 and print in arabic numbers.
   \setcounter{page}{1}
   \pagenumbering{arabic}
