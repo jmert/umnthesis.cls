@@ -59,7 +59,7 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 % Inclusion of figures should always happen via graphicx
-  \RequirePackage{graphicx}
+  \RequirePackage[final]{graphicx}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %% U OF M FORMATTING REQUIREMENTS
@@ -193,7 +193,7 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 % Use microtype enhancements to make the visual appearance as nice as possible.
-  \RequirePackage{microtype}
+  \RequirePackage[final]{microtype}
 
 % Patch \bfseries to also switch math into bold mode. This is really useful
 % for situations like having math in a section heading which may or may not
@@ -230,7 +230,7 @@
     }
   }
   \PreAtEndPreamble{%
-    \RequirePackage{hyperref}%
+    \RequirePackage[draft=false]{hyperref}%
     \RequirePackage[all]{hypcap}%
   }
   \AtEndPreamble{%
