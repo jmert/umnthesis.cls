@@ -61,6 +61,16 @@
 % Inclusion of figures should always happen via graphicx
   \RequirePackage[final]{graphicx}
 
+% Provide nicer table handling by default
+  \RequirePackage{tabularx}
+  \RequirePackage{booktabs}
+
+% Improve captions on both figures and tables
+  \RequirePackage[
+    font=footnotesize,
+    labelfont=bf
+  ]{caption}
+
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %% U OF M FORMATTING REQUIREMENTS
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
