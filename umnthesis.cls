@@ -71,6 +71,10 @@
     labelfont=bf
   ]{caption}
 
+% Have List of Figures, List of Tables, and Bibliography show up in the
+% Table of Contents.
+  \RequirePackage[nottoc]{tocbibind}
+
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %% U OF M FORMATTING REQUIREMENTS
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -178,6 +182,13 @@
 % biber enabled by default. Then let the user control any further settings.
 
   \RequirePackage[backend=biber]{biblatex}
+  % Note that the tocbibind package can't automatically add the bibliography
+  % heading to the Table of Contents after loading this, so you should
+  % print out the bibliography using
+  %
+  %   \printbibliography[heading=bibintoc]
+  %
+  % to achieve that.
 
 %%%%%%%%%%%%
 %% GLOSSARY
@@ -336,12 +347,10 @@
   \clearpage
   %%%%%%%%%%%%%%%%%%%
   %% LIST OF FIGURES
-  \addcontentsline{toc}{chapter}{\listfigurename}
   \listoffigures
   \clearpage
   %%%%%%%%%%%%%%%%%%
   %% LIST OF TABLES
-  \addcontentsline{toc}{chapter}{\listtablename}
   \listoftables
   \clearpage
   %%%%%%%%%%%%%%%%%
