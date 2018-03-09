@@ -1,5 +1,5 @@
 \NeedsTeXFormat{LaTeX2e}
-\ProvidesClass{umnthesis}[2017/08/09 UMN Graduate School Thesis]
+\ProvidesClass{umnthesis}[2018/03/09 UMN Graduate School Thesis]
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %% DOCUMENT CLASS OPTIONS
@@ -171,8 +171,44 @@
 % front matter.
   \DeclareRobustCommand{\abstract}[1]{\gdef\@abstract{#1}}
   \newcommand{\printabstract}{%
-    \chapter*{Abstract}%
-    \@abstract%
+    \ifdef{\@abstract}{%
+      \chapter*{Abstract}%
+      \@abstract%
+    }{
+      \ClassError{umnthesis}{%
+        An abstract is not optional.\MessageBreak%
+        \MessageBreak%
+        Add an abstract by writing \protect\abstract{<text>} in your\MessageBreak%
+        document preamble%
+      }
+    }
+  }
+
+% Then make similar macros to provide optional Acknowledgements and
+% Dedication sections.
+%
+%   These are both optional, though, so print nothing if the internal text
+%   macro is undefined (signalling that the author didn't call it).
+
+  \DeclareRobustCommand{\acknowledgements}[1]{\gdef\@acknowledgements{#1}}
+  \newcommand{\printacknowledgements}{%
+    \ifdef{\@acknowledgements}{%
+      \chapter*{Acknowledgements}%
+      \@acknowledgements%
+      \clearpage%
+    }{%
+      \relax%
+    }
+  }
+  \DeclareRobustCommand{\dedication}[1]{\gdef\@dedication{#1}}
+  \newcommand{\printdedication}{%
+    \ifdef{\@dedication}{%
+      \chapter*{Dedication}%
+      \@dedication%
+      \clearpage%
+    }{%
+      \relax%
+    }
   }
 
 %%%%%%%%%%%%%%%%
@@ -335,8 +371,11 @@
   % and start it's numbering at 1.
   \setcounter{page}{1}
   \pagenumbering{roman}%
-  % Optional acknowledgements page
-  % Optional dedications page
+  %%%%%%%%%%%%%%%%%
+  %% OPTIONAL ACKNOWLEDGEMENTS AND DEDICATION PAGES
+  %%   \clearpage is handled by print macros, so none here
+  \printacknowledgements
+  \printdedication
   %%%%%%%%%%%%%%%%%
   %% ABSTRACT PAGE
   \printabstract
@@ -368,4 +407,4 @@
   \pagenumbering{arabic}
 }
 
-% vim: set syntax=tex:
+% vim: set syntax=tex sw=2 sts=2 ts=2 et:
