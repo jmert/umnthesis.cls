@@ -166,13 +166,18 @@
 
 % Use "Table of Contents" instead of "Contents"
   \renewcommand{\contentsname}{Table of Contents}
+% Also provide redefinable macros setting the Abstract, Acknowledgements, and
+% Dedication pages as well.
+  \providecommand{\abstractname}{Abstract}
+  \providecommand{\acknowledgementsname}{Abstract}
+  \providecommand{\dedicationname}{Abstract}
 
 % Redefine the abstract command to hold its argument for printing in the
 % front matter.
   \DeclareRobustCommand{\abstract}[1]{\gdef\@abstract{#1}}
   \newcommand{\printabstract}{%
     \ifdef{\@abstract}{%
-      \chapter*{Abstract}%
+      \chapter*{\abstractname}%
       \@abstract%
     }{
       \ClassError{umnthesis}{%
@@ -193,7 +198,7 @@
   \DeclareRobustCommand{\acknowledgements}[1]{\gdef\@acknowledgements{#1}}
   \newcommand{\printacknowledgements}{%
     \ifdef{\@acknowledgements}{%
-      \chapter*{Acknowledgements}%
+      \chapter*{\acknowledgementsname}%
       \@acknowledgements%
       \clearpage%
     }{%
@@ -203,7 +208,7 @@
   \DeclareRobustCommand{\dedication}[1]{\gdef\@dedication{#1}}
   \newcommand{\printdedication}{%
     \ifdef{\@dedication}{%
-      \chapter*{Dedication}%
+      \chapter*{\dedicationname}%
       \@dedication%
       \clearpage%
     }{%
