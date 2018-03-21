@@ -166,11 +166,11 @@
 
 % Use "Table of Contents" instead of "Contents"
   \renewcommand{\contentsname}{Table of Contents}
-% Also provide redefinable macros setting the Abstract, Acknowledgements, and
+% Also provide redefinable macros setting the Abstract, Acknowledgments, and
 % Dedication pages as well.
   \providecommand{\abstractname}{Abstract}
-  \providecommand{\acknowledgementsname}{Abstract}
-  \providecommand{\dedicationname}{Abstract}
+  \providecommand{\acknowledgmentsname}{Acknowledgments}
+  \providecommand{\dedicationname}{Dedication}
 
 % Redefine the abstract command to hold its argument for printing in the
 % front matter.
@@ -189,17 +189,17 @@
     }
   }
 
-% Then make similar macros to provide optional Acknowledgements and
+% Then make similar macros to provide optional Acknowledgments and
 % Dedication sections.
 %
 %   These are both optional, though, so print nothing if the internal text
 %   macro is undefined (signalling that the author didn't call it).
 
-  \DeclareRobustCommand{\acknowledgements}[1]{\gdef\@acknowledgements{#1}}
-  \newcommand{\printacknowledgements}{%
-    \ifdef{\@acknowledgements}{%
-      \chapter*{\acknowledgementsname}%
-      \@acknowledgements%
+  \DeclareRobustCommand{\acknowledgments}[1]{\gdef\@acknowledgments{#1}}
+  \newcommand{\printacknowledgments}{%
+    \ifdef{\@acknowledgments}{%
+      \chapter*{\acknowledgmentsname}%
+      \@acknowledgments%
       \clearpage%
     }{%
       \relax%
@@ -377,9 +377,9 @@
   \setcounter{page}{1}
   \pagenumbering{roman}%
   %%%%%%%%%%%%%%%%%
-  %% OPTIONAL ACKNOWLEDGEMENTS AND DEDICATION PAGES
+  %% OPTIONAL ACKNOWLEDGMENTS AND DEDICATION PAGES
   %%   \clearpage is handled by print macros, so none here
-  \printacknowledgements
+  \printacknowledgments
   \printdedication
   %%%%%%%%%%%%%%%%%
   %% ABSTRACT PAGE
