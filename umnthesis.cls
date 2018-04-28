@@ -1,5 +1,5 @@
 \NeedsTeXFormat{LaTeX2e}
-\ProvidesClass{umnthesis}[2018/03/09 UMN Graduate School Thesis]
+\ProvidesClass{umnthesis}[2018/04/28 UMN Graduate School Thesis]
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %% DOCUMENT CLASS OPTIONS
@@ -104,6 +104,8 @@
 % either Helvetica or Arial. STIX provides Times-compatible text font and a
 % matching math font.
   \RequirePackage{stix}
+  \RequirePackage[scaled=0.92]{helvet}
+  \RequirePackage{courier}
 
 % The author's opinion is that the STIX summation symbol is highly inferior
 % to those in Computer Modern/Latin Modern. Use CM since it provides a symbol
