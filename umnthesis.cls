@@ -1,5 +1,5 @@
 \NeedsTeXFormat{LaTeX2e}
-\ProvidesClass{umnthesis}[2018/04/28 UMN Graduate School Thesis]
+\ProvidesClass{umnthesis}[2018/04/30 UMN Graduate School Thesis]
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %% DOCUMENT CLASS OPTIONS
@@ -127,6 +127,11 @@
   \DeclareSymbolFont{plletters}{OML}{zplm}{m}{it}
   \DeclareMathSymbol{\ell}{\mathalpha}{plletters}{"60}
 
+% Patch \bfseries to also switch math into bold mode. This is really useful
+% for situations like having math in a section heading which may or may not
+% be bolded.
+  \xapptocmd{\bfseries}{\boldmath}{}{}
+
 %%%%%%%%%%%
 %% SPACING
 
@@ -135,14 +140,15 @@
 % default.
   \RequirePackage{setspace}
   \doublespacing
-  % Typeset display math in single spacing mode, though. This is particularly
-  % important when writing out matrices.
   \AtEndPreamble{%
-      \makeatletter%
-      \everydisplay=\expandafter{%
-          \the\everydisplay\def\baselinestretch{1}\selectfont%
-      }%
-      \makeatother%
+    % Typeset display math in single spacing mode, though. This is particularly
+    % important when writing out matrices.
+    \everydisplay=\expandafter{%
+      \the\everydisplay\def\baselinestretch{1}\selectfont%
+    }%
+    \everymath=\expandafter{%
+      \the\everymath\def\baselinestretch{1}\selectfont%
+    }%
   }
 
 %%%%%%%%%%%%%%
