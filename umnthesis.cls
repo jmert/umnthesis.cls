@@ -1,14 +1,29 @@
 \NeedsTeXFormat{LaTeX2e}
-\ProvidesClass{umnthesis}[2018/04/30 UMN Graduate School Thesis]
+\ProvidesClass{umnthesis}[2019/04/20 UMN Graduate School Thesis]
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %% DOCUMENT CLASS OPTIONS
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \RequirePackage{kvoptions}
+\RequirePackage{xparse}
+
+% Macro to generate complemantary class options with names `x` and no`x` which
+% have opposite meanings. Defaults to `x` = true.
+\NewDocumentCommand{\DeclareBoolOptionPair}{ O{true} m }{%
+  \DeclareBoolOption[#1]{#2}%
+  \DeclareComplementaryOption{no#2}{#2}%
+}
 
 % Enables use of glossaries
 % TODO: Make the glossary package options customizable
-\DeclareBoolOption{glossary}
+\DeclareBoolOptionPair[false]{glossary}
+
+% Support disabling certain features; useful for, e.g., standalone/preview
+% picture environments which will inherit many settings but don't need full
+% document functionality.
+\DeclareBoolOptionPair{bib}         % Whether a bibliography is generated
+\DeclareBoolOptionPair{frontmatter} % Whether to typset the frontmatter
+\DeclareBoolOptionPair{hyperref}    % Whether to load and use hyperref
 
 \ProcessKeyvalOptions*
 
@@ -230,7 +245,12 @@
 % Few restrictions are placed on the bibliography, so just load biblatex with
 % biber enabled by default. Then let the user control any further settings.
 
-  \RequirePackage[backend=biber]{biblatex}
+  \ifumnthesis@bib
+    \RequirePackage[
+        backend=biber,
+        citestyle=numeric-comp,
+      ]{biblatex}
+  \fi
   % Note that the tocbibind package can't automatically add the bibliography
   % heading to the Table of Contents after loading this, so you should
   % print out the bibliography using
@@ -299,26 +319,29 @@
       See comments in the source for umnthesis.cls for more information.
     }
   }
-  \PreAtEndPreamble{%
-    \RequirePackage[draft=false]{hyperref}%
-    \RequirePackage[all]{hypcap}%
-  }
-  \AtEndPreamble{%
-    % For some reason, the following commands do not seem to work if added to
-    % the package options, so we pass them via the hypersetup command instead.
-    \hypersetup{
-      % The following two options create colored underlines for links when
-      % viewed with a PDF reader on screen, but do not apply to a printed
-      % document.
-      ,pdfborderstyle = {/S/U/W 1}%
-      ,ocgcolorlinks  = true%
-      % With on-screen indicators, disable colors in the printed form.
-      ,colorlinks     = false%
-      % Include some metadata
-      ,pdfauthor      = {\@author}%
-      ,pdftitle       = {\@title}%
-    }%
-  }
+  \ifumnthesis@hyperref
+    \PreAtEndPreamble{%
+      \RequirePackage[draft=false]{hyperref}%
+      \RequirePackage[all]{hypcap}%
+    }
+    \AtEndPreamble{%
+      % For some reason, the following commands do not seem to work if added to
+      % the package options, so we pass them via the hypersetup command instead.
+      \hypersetup{
+        % The following two options create colored underlines for links when
+        % viewed with a PDF reader on screen, but do not apply to a printed
+        % document.
+        ,pdfborderstyle = {/S/U/W 1}%
+        ,ocgcolorlinks  = true%
+        % With on-screen indicators, disable colors in the printed form.
+        ,colorlinks     = false%
+        % Include some metadata
+        ,pdfauthor      = {\@author}%
+        ,pdftitle       = {\@title}%
+      }%
+    }
+  \fi % \ifumnthesis@hyperref
+
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %% DOCUMENT SETUP
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -326,98 +349,100 @@
 % At the beginning of the document, automatically handle creating the front
 % matter based on various settings that must be set within the preamble.
 
-% Note that we use \AfterEndPreamble rather than \AtDocumentBegin. There is a
-% difference, and using the latter causes the PDF page numbers to become out
-% of sync with the LaTeX page numbers. See etoolbox documentation for details
-% on how the two commands differ.
-\AfterEndPreamble{%
-  % Remove all space that may be reserved for a header and footer on the
-  % title and copyright pages.
-  \newgeometry{%
-    margin = 1in,%
-    left = 1.5in,%
-    noheadfoot,%
-    ignoreheadfoot%
-  }%
-  % Also "number" them using latin letters. This only effects the PDF page
-  % numbering since we won't be printing them onto the page.
-  \pagenumbering{alph}%
-  %%%%%%%%%%%%
-  %% TITLE PAGE
-  \begingroup%
-    \pagestyle{empty}
-     %Everything is centered and larger than the body text
-    \centering%
-    \large%
-    % Title first
-    \MakeUppercase{\@title}%
-    \par\vfill
-    A DISSERTATION SUBMITTED TO THE FACULTY OF THE
-    \MakeUppercase{\umnthesis@institution} BY
-    \par\vfill
-    \MakeUppercase{\@author}
-    \par\vfill
-    IN PARTIAL FULFILLMENT OF THE REQUIREMENTS FOR THE DEGREE OF
-    DOCTOR OF PHILOSOPHY
-    \par\vfill
-    \MakeUppercase{\umnthesis@advisor}
-    \par\vfill
-    \MakeUppercase{\umnthesis@month}~\MakeUppercase{\umnthesis@year}
-    \clearpage
-  \endgroup%
-  %%%%%%%%%%%%%%%%
-  %% COPYRIGHT PAGE
-  \begingroup%
-    \pagestyle{empty}%
-    % Use normal size text, but still centered
-    \normalsize%
-    \centering%
-    % Vertically center the content
-    \null\vfill
-    \copyright~\MakeUppercase{\@author}~\umnthesis@year\\
-    ALL RIGHTS RESERVED
-    \vfill
-    \clearpage
-  \endgroup
-  \restoregeometry
-  % Now switch to roman numeral numbering for the rest of the front matter,
-  % and start it's numbering at 1.
-  \setcounter{page}{1}
-  \pagenumbering{roman}%
-  %%%%%%%%%%%%%%%%%
-  %% OPTIONAL ACKNOWLEDGMENTS AND DEDICATION PAGES
-  %%   \clearpage is handled by print macros, so none here
-  \printacknowledgments
-  \printdedication
-  %%%%%%%%%%%%%%%%%
-  %% ABSTRACT PAGE
-  \printabstract
-  \clearpage
-  %%%%%%%%%%%%%%%%%%%%%%%%%%%
-  %% TABLE OF CONTENTS PAGES
-  \tableofcontents
-  \clearpage
-  %%%%%%%%%%%%%%%%%%%
-  %% LIST OF FIGURES
-  \listoffigures
-  \clearpage
-  %%%%%%%%%%%%%%%%%%
-  %% LIST OF TABLES
-  \listoftables
-  \clearpage
-  %%%%%%%%%%%%%%%%%
-  %% DOCUMENT BODY
-  % In twoside mode, make sure we skip another page if necessary
-  \if@twoside
-    \ifodd\c@page
-    \else
-      \hbox{}
+\ifumnthesis@frontmatter
+  % Note that we use \AfterEndPreamble rather than \AtDocumentBegin. There is a
+  % difference, and using the latter causes the PDF page numbers to become out
+  % of sync with the LaTeX page numbers. See etoolbox documentation for details
+  % on how the two commands differ.
+  \AfterEndPreamble{%
+    % Remove all space that may be reserved for a header and footer on the
+    % title and copyright pages.
+    \newgeometry{%
+      margin = 1in,%
+      left = 1.5in,%
+      noheadfoot,%
+      ignoreheadfoot%
+    }%
+    % Also "number" them using latin letters. This only effects the PDF page
+    % numbering since we won't be printing them onto the page.
+    \pagenumbering{alph}%
+    %%%%%%%%%%%%
+    %% TITLE PAGE
+    \begingroup%
+      \pagestyle{empty}
+       %Everything is centered and larger than the body text
+      \centering%
+      \large%
+      % Title first
+      \MakeUppercase{\@title}%
+      \par\vfill
+      A DISSERTATION SUBMITTED TO THE FACULTY OF THE
+      \MakeUppercase{\umnthesis@institution} BY
+      \par\vfill
+      \MakeUppercase{\@author}
+      \par\vfill
+      IN PARTIAL FULFILLMENT OF THE REQUIREMENTS FOR THE DEGREE OF
+      DOCTOR OF PHILOSOPHY
+      \par\vfill
+      \MakeUppercase{\umnthesis@advisor}
+      \par\vfill
+      \MakeUppercase{\umnthesis@month}~\MakeUppercase{\umnthesis@year}
       \clearpage
+    \endgroup%
+    %%%%%%%%%%%%%%%%
+    %% COPYRIGHT PAGE
+    \begingroup%
+      \pagestyle{empty}%
+      % Use normal size text, but still centered
+      \normalsize%
+      \centering%
+      % Vertically center the content
+      \null\vfill
+      \copyright~\MakeUppercase{\@author}~\umnthesis@year\\
+      ALL RIGHTS RESERVED
+      \vfill
+      \clearpage
+    \endgroup
+    \restoregeometry
+    % Now switch to roman numeral numbering for the rest of the front matter,
+    % and start it's numbering at 1.
+    \setcounter{page}{1}
+    \pagenumbering{roman}%
+    %%%%%%%%%%%%%%%%%
+    %% OPTIONAL ACKNOWLEDGMENTS AND DEDICATION PAGES
+    %%   \clearpage is handled by print macros, so none here
+    \printacknowledgments
+    \printdedication
+    %%%%%%%%%%%%%%%%%
+    %% ABSTRACT PAGE
+    \printabstract
+    \clearpage
+    %%%%%%%%%%%%%%%%%%%%%%%%%%%
+    %% TABLE OF CONTENTS PAGES
+    \tableofcontents
+    \clearpage
+    %%%%%%%%%%%%%%%%%%%
+    %% LIST OF FIGURES
+    \listoffigures
+    \clearpage
+    %%%%%%%%%%%%%%%%%%
+    %% LIST OF TABLES
+    \listoftables
+    \clearpage
+    %%%%%%%%%%%%%%%%%
+    %% DOCUMENT BODY
+    % In twoside mode, make sure we skip another page if necessary
+    \if@twoside
+      \ifodd\c@page
+      \else
+        \hbox{}
+        \clearpage
+      \fi
     \fi
-  \fi
-  % Finally, reset the counter again to 1 and print in arabic numbers.
-  \setcounter{page}{1}
-  \pagenumbering{arabic}
-}
+    % Finally, reset the counter again to 1 and print in arabic numbers.
+    \setcounter{page}{1}
+    \pagenumbering{arabic}
+  }
+\fi % \ifumnthesis@frontmatter
 
 % vim: set syntax=tex sw=2 sts=2 ts=2 et:
