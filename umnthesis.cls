@@ -1,5 +1,5 @@
 \NeedsTeXFormat{LaTeX2e}
-\ProvidesClass{umnthesis}[2019/04/20 UMN Graduate School Thesis]
+\ProvidesClass{umnthesis}[2019/05/23 UMN Graduate School Thesis]
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %% DOCUMENT CLASS OPTIONS
@@ -283,7 +283,7 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 % Use microtype enhancements to make the visual appearance as nice as possible.
-  \RequirePackage[final]{microtype}
+  \RequirePackage{microtype}
 
 % Patch \bfseries to also switch math into bold mode. This is really useful
 % for situations like having math in a section heading which may or may not
@@ -321,7 +321,7 @@
   }
   \ifumnthesis@hyperref
     \PreAtEndPreamble{%
-      \RequirePackage[draft=false]{hyperref}%
+      \RequirePackage[draft=false,unicode]{hyperref}%
       \RequirePackage[all]{hypcap}%
     }
     \AtEndPreamble{%
@@ -419,6 +419,9 @@
     \clearpage
     %%%%%%%%%%%%%%%%%%%%%%%%%%%
     %% TABLE OF CONTENTS PAGES
+    \ifumnthesis@hyperref
+      \currentpdfbookmark{\contentsname}{contents}
+    \fi
     \tableofcontents
     \clearpage
     %%%%%%%%%%%%%%%%%%%
