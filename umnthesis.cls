@@ -1,5 +1,5 @@
 \NeedsTeXFormat{LaTeX2e}
-\ProvidesClass{umnthesis}[2019/05/23 UMN Graduate School Thesis]
+\ProvidesClass{umnthesis}[2019/06/25 UMN Graduate School Thesis]
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %% DOCUMENT CLASS OPTIONS
@@ -110,8 +110,12 @@
 %%%%%%%%%
 %% FONTS
 
-% Use Type1 fonts.
-  \RequirePackage[T1]{fontenc}
+  \ifxeluatex
+    \RequirePackage[no-math]{fontspec}
+  \else
+    % Use Type1 fonts.
+    \RequirePackage[T1]{fontenc}
+  \fi
 
 % The choice of fonts is highly restrictive:
 %
@@ -141,6 +145,13 @@
   %     Loads Palatino and assigns \ell to use it instead.
   \DeclareSymbolFont{plletters}{OML}{zplm}{m}{it}
   \DeclareMathSymbol{\ell}{\mathalpha}{plletters}{"60}
+
+% Some manual kerning corrections:
+  % The subscript on \nabla should be kerned a bit more tightly.
+  \let\OldNabla\nabla
+  \RenewDocumentCommand{\nabla}{e_}{%
+    \OldNabla\IfValueT{#1}{_{\!#1}}%
+  }
 
 % Patch \bfseries to also switch math into bold mode. This is really useful
 % for situations like having math in a section heading which may or may not
