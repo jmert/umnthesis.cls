@@ -1,5 +1,5 @@
 \NeedsTeXFormat{LaTeX2e}
-\ProvidesClass{umnthesis}[2019/06/25 UMN Graduate School Thesis]
+\ProvidesClass{umnthesis}[2019/07/11 UMN Graduate School Thesis]
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %% DOCUMENT CLASS OPTIONS
@@ -31,6 +31,11 @@
 % The U of M thesis also has margin requirements that are easiest to match in
 % one-sided mode.
 \LoadClassWithOptions{report}
+
+% Generate a hook that can be used to delay code until after the front
+% matter has been typeset.
+\def\umnthesis@frontmatterhook{}\relax
+\def\AfterEndFrontmatter{\g@addto@macro\umnthesis@frontmatterhook}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %% LATEX SETUP
@@ -458,5 +463,11 @@
     \pagenumbering{arabic}
   }
 \fi % \ifumnthesis@frontmatter
+
+\AfterEndPreamble{%
+  \ifdefined\umnthesis@frontmatterhook
+    \umnthesis@frontmatterhook
+  \fi
+}
 
 % vim: set syntax=tex sw=2 sts=2 ts=2 et:
