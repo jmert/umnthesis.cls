@@ -1,5 +1,5 @@
 \NeedsTeXFormat{LaTeX2e}
-\ProvidesClass{umnthesis}[2019/07/11 UMN Graduate School Thesis]
+\ProvidesClass{umnthesis}[2019/07/13 UMN Graduate School Thesis]
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %% DOCUMENT CLASS OPTIONS
@@ -22,6 +22,7 @@
 % picture environments which will inherit many settings but don't need full
 % document functionality.
 \DeclareBoolOptionPair{bib}         % Whether a bibliography is generated
+\DeclareBoolOptionPair{fonts}       % Default font handling may be disabled
 \DeclareBoolOptionPair{frontmatter} % Whether to typset the frontmatter
 \DeclareBoolOptionPair{hyperref}    % Whether to load and use hyperref
 
@@ -114,6 +115,7 @@
 
 %%%%%%%%%
 %% FONTS
+\ifumnthesis@fonts
 
   \ifxeluatex
     \RequirePackage[no-math]{fontspec}
@@ -150,6 +152,8 @@
   %     Loads Palatino and assigns \ell to use it instead.
   \DeclareSymbolFont{plletters}{OML}{zplm}{m}{it}
   \DeclareMathSymbol{\ell}{\mathalpha}{plletters}{"60}
+
+\fi
 
 % Some manual kerning corrections:
   % The subscript on \nabla should be kerned a bit more tightly.
@@ -265,7 +269,7 @@
     \RequirePackage[
         backend=biber,
         citestyle=numeric-comp,
-      ]{biblatex}
+      ]{biblatex}[2018/02/20]
   \fi
   % Note that the tocbibind package can't automatically add the bibliography
   % heading to the Table of Contents after loading this, so you should
