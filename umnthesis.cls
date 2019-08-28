@@ -1,5 +1,5 @@
 \NeedsTeXFormat{LaTeX2e}
-\ProvidesClass{umnthesis}[2019/07/13 UMN Graduate School Thesis]
+\ProvidesClass{umnthesis}[2019/08/28 UMN Graduate School Thesis]
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %% DOCUMENT CLASS OPTIONS
@@ -363,6 +363,32 @@
       }%
     }
   \fi % \ifumnthesis@hyperref
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% MISCELLANEOUS FORMATTING FIXES
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+  % Fix frame boundaries drawn by geometry in the context of landscape pages
+  % from lscape and pdflscape.
+  %
+  % Solution taken from
+  %     https://tex.stackexchange.com/a/116521
+  \PreAtEndPreamble{%
+    % pdflscape loads lscape, so we can get away with just checking for the
+    % latter.
+    \@ifpackageloaded{lscape}{%
+      \newcommand*{\gmshow@textheight}{\textheight}
+      \newdimen\gmshow@@textheight%
+      \g@addto@macro\landscape{%
+        \gmshow@@textheight=\hsize%
+        \renewcommand*{\gmshow@textheight}{\gmshow@@textheight}%
+      }%
+      \def\Gm@vrule{%
+        \vrule width 0.2pt height\gmshow@textheight depth\z@%
+      }%
+    }{}% \@ifclassloaded
+  } % \PreAtEndPreamble
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %% DOCUMENT SETUP
