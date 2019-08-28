@@ -342,7 +342,9 @@
   \ifumnthesis@hyperref
     \PreAtEndPreamble{%
       \RequirePackage[draft=false,unicode]{hyperref}%
-      \RequirePackage[all]{hypcap}%
+      \@ifclassloaded{standalone}{}{%
+        \RequirePackage[all]{hypcap}%
+      }
     }
     \AtEndPreamble{%
       % For some reason, the following commands do not seem to work if added to
