@@ -303,7 +303,7 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 % Use microtype enhancements to make the visual appearance as nice as possible.
-  \RequirePackage{microtype}
+  \RequirePackage[final]{microtype}
 
 % Patch \bfseries to also switch math into bold mode. This is really useful
 % for situations like having math in a section heading which may or may not
@@ -418,23 +418,38 @@
     %% TITLE PAGE
     \begingroup%
       \pagestyle{empty}
+      \hbox{}
        %Everything is centered and larger than the body text
-      \centering%
-      \large%
+      \centering\large%
       % Title first
-      \MakeUppercase{\@title}%
       \par\vfill
-      A DISSERTATION SUBMITTED TO THE FACULTY OF THE
-      \MakeUppercase{\umnthesis@institution} BY
+      {
+        \Large
+        \MakeUppercase{\@title}%
+      }
       \par\vfill
-      \MakeUppercase{\@author}
+      {
+        A DISSERTATION\\
+        SUBMITTED TO THE FACULTY OF THE\\
+        \MakeUppercase{\umnthesis@institution}\\
+        BY
+      }
       \par\vfill
-      IN PARTIAL FULFILLMENT OF THE REQUIREMENTS FOR THE DEGREE OF
-      DOCTOR OF PHILOSOPHY
+      {
+        \Large
+        \MakeUppercase{\@author}
+      }
       \par\vfill
-      \MakeUppercase{\umnthesis@advisor}
+      {
+        IN PARTIAL FULFILLMENT OF THE REQUIREMENTS\\
+        FOR THE DEGREE OF\\
+        DOCTOR OF PHILOSOPHY
+      }
       \par\vfill
-      \MakeUppercase{\umnthesis@month}~\MakeUppercase{\umnthesis@year}
+      {
+        \MakeUppercase{\umnthesis@advisor}\\
+        \MakeUppercase{\umnthesis@month}~\MakeUppercase{\umnthesis@year}
+      }
       \clearpage
     \endgroup%
     %%%%%%%%%%%%%%%%
