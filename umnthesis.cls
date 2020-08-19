@@ -18,6 +18,10 @@
 % TODO: Make the glossary package options customizable
 \DeclareBoolOptionPair[false]{glossary}
 
+% Add line numbers in draft mode. Defaults to false, but defined as package
+% option since some patching is required to make numbering work with amsmath.
+\DeclareBoolOptionPair[false]{linenumbers}
+
 % Support disabling certain features; useful for, e.g., standalone/preview
 % picture environments which will inherit many settings but don't need full
 % document functionality.
@@ -309,6 +313,42 @@
 % for situations like having math in a section heading which may or may not
 % be bolded.
   \xapptocmd{\bfseries}{\boldmath}{}{}
+
+
+% In draft mode, enable line numbers on all lines. This aids in receiving
+% feedback.
+\ifumnthesis@linenumbers
+  \ifdraft{%
+    \RequirePackage[switch*]{lineno}
+    % The AMS math environments don't interact well with the line numbering
+    % by default, so patch those up if necessary.
+    %
+    % Solution adapted from https://tex.stackexchange.com/a/55297
+    \newcommand*\patchAmsMathEnvironmentForLineno[1]{%
+      \expandafter\let\csname old#1\expandafter\endcsname\csname #1\endcsname
+      \expandafter\let\csname oldend#1\expandafter\endcsname\csname end#1\endcsname
+      \renewenvironment{#1}%
+         {\linenomath\csname old#1\endcsname}%
+         {\csname oldend#1\endcsname\endlinenomath}%
+    }%
+    \newcommand*\patchBothAmsMathEnvironmentsForLineno[1]{%
+      \patchAmsMathEnvironmentForLineno{#1}%
+      \patchAmsMathEnvironmentForLineno{#1*}%
+    }%
+    \AtBeginDocument{%
+      \linenumbers%
+      \@ifpackageloaded{amsmath}{%
+        \patchBothAmsMathEnvironmentsForLineno{equation}%
+        \patchBothAmsMathEnvironmentsForLineno{align}%
+        \patchBothAmsMathEnvironmentsForLineno{flalign}%
+        \patchBothAmsMathEnvironmentsForLineno{alignat}%
+        \patchBothAmsMathEnvironmentsForLineno{gather}%
+        \patchBothAmsMathEnvironmentsForLineno{multline}%
+      }{}% \@ifpackageloaded
+    }%
+  }{}% \ifdraft
+\fi
+
 
 % Use PDF hyperlinks. Load this at the end of the preamble as required by the
 % hyperref documentation.
