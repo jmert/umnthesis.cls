@@ -1,5 +1,5 @@
 \NeedsTeXFormat{LaTeX2e}
-\ProvidesClass{umnthesis}[2019/08/28 UMN Graduate School Thesis]
+\ProvidesClass{umnthesis}[2021/03/23 UMN Graduate School Thesis]
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %% DOCUMENT CLASS OPTIONS
@@ -99,6 +99,32 @@
 % Have List of Figures, List of Tables, and Bibliography show up in the
 % Table of Contents.
   \RequirePackage[nottoc]{tocbibind}
+
+% Use PDF hyperlinks. Load this at the end of the preamble as required by the
+% hyperref documentation.
+  \ifumnthesis@hyperref
+    \AtEndPreamble{%
+      \RequirePackage[draft=false,unicode]{hyperref}%
+      \@ifclassloaded{standalone}{}{%
+        \RequirePackage[all]{hypcap}%
+      }
+      % For some reason, the following commands do not seem to work if added to
+      % the package options, so we pass them via the hypersetup command instead.
+      \hypersetup{
+        % The following two options create colored underlines for links when
+        % viewed with a PDF reader on screen, but do not apply to a printed
+        % document.
+        ,pdfborderstyle = {/S/U/W 1}%
+        ,ocgcolorlinks  = true%
+        % With on-screen indicators, disable colors in the printed form.
+        ,colorlinks     = false%
+        % Include some metadata
+        ,pdfauthor      = {\@author}%
+        ,pdftitle       = {\@title}%
+      }%
+    }
+  \fi % \ifumnthesis@hyperref
+
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %% U OF M FORMATTING REQUIREMENTS
@@ -283,9 +309,19 @@
   %
   % to achieve that.
 
-%%%%%%%%%%%%
-%% GLOSSARY
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% OPTIONAL FORMATTING CHANGES
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
+% Use microtype enhancements to make the visual appearance as nice as possible.
+  \RequirePackage[final]{microtype}
+
+% Patch \bfseries to also switch math into bold mode. This is really useful
+% for situations like having math in a section heading which may or may not
+% be bolded.
+  \xapptocmd{\bfseries}{\boldmath}{}{}
+
+% Optional glossary
 \ifumnthesis@glossary
   % glossaries must be loaded after hyperref. Since hyperref will push itself
   % onto the top of the AtEndPreamble stack, we can just append to the end
@@ -301,19 +337,6 @@
     \makeglossaries
   }
 \fi
-
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%% OPTIONAL FORMATTING CHANGES
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-
-% Use microtype enhancements to make the visual appearance as nice as possible.
-  \RequirePackage[final]{microtype}
-
-% Patch \bfseries to also switch math into bold mode. This is really useful
-% for situations like having math in a section heading which may or may not
-% be bolded.
-  \xapptocmd{\bfseries}{\boldmath}{}{}
-
 
 % In draft mode, enable line numbers on all lines. This aids in receiving
 % feedback.
@@ -350,61 +373,6 @@
 \fi
 
 
-% Use PDF hyperlinks. Load this at the end of the preamble as required by the
-% hyperref documentation.
-%
-% IMPORTANT NOTE!
-%   It took much debugging to figure out that biblatex makes use of the
-%   \AtEndPreamble command to finalize much of its setup, especially with
-%   respect to knowing if hyperref has been loaded or not. For this reason,
-%   loading hyperref with \AtEndPreamble as well *after* we've already loaded
-%   biblatex means the the code below is executed after code that biblatex
-%   has loaded into the hook.
-%
-%   To get around this, we can instead *prepend* our code to the hook that
-%   \AtEndPreamble normally appends to. We do this by patching a copy of the
-%   command to use \gpreto instead of \gappto.
-%
-  \let\PreAtEndPreamble\AtEndPreamble%
-  \patchcmd{\PreAtEndPreamble}{\gappto}{\gpreto}{}{%
-    \ClassError{umnthesis}{%
-      Prepending to the \verb|\AtEndPreamble| hook failed. Could not setup
-      hyperref correctly.
-    }{%
-      Loading hyperref is a tricky business, and our attempt to have hyperref
-      load at the correct time when also using biblatex failed. A guess would
-      be that the format of the \verb|\AtEndPreamble| command has changed,
-      which means our attempt to patch a copy for our purposes has failed.
-      \MessageBreak\MessageBreak
-      See comments in the source for umnthesis.cls for more information.
-    }
-  }
-  \ifumnthesis@hyperref
-    \PreAtEndPreamble{%
-      \RequirePackage[draft=false,unicode]{hyperref}%
-      \@ifclassloaded{standalone}{}{%
-        \RequirePackage[all]{hypcap}%
-      }
-    }
-    \AtEndPreamble{%
-      % For some reason, the following commands do not seem to work if added to
-      % the package options, so we pass them via the hypersetup command instead.
-      \hypersetup{
-        % The following two options create colored underlines for links when
-        % viewed with a PDF reader on screen, but do not apply to a printed
-        % document.
-        ,pdfborderstyle = {/S/U/W 1}%
-        ,ocgcolorlinks  = true%
-        % With on-screen indicators, disable colors in the printed form.
-        ,colorlinks     = false%
-        % Include some metadata
-        ,pdfauthor      = {\@author}%
-        ,pdftitle       = {\@title}%
-      }%
-    }
-  \fi % \ifumnthesis@hyperref
-
-
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %% MISCELLANEOUS FORMATTING FIXES
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -414,7 +382,7 @@
   %
   % Solution taken from
   %     https://tex.stackexchange.com/a/116521
-  \PreAtEndPreamble{%
+  \AtEndPreamble{%
     % pdflscape loads lscape, so we can get away with just checking for the
     % latter.
     \@ifpackageloaded{lscape}{%
@@ -428,7 +396,7 @@
         \vrule width 0.2pt height\gmshow@textheight depth\z@%
       }%
     }{}% \@ifclassloaded
-  } % \PreAtEndPreamble
+  } % \AtEndPreamble
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %% DOCUMENT SETUP
